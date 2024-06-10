@@ -72,7 +72,7 @@ public class UnitManager : MonoBehaviour
 
   private void MultiSelect(GameObject unit)
   {
-    OnEnableAllSelected(false);
+    EnableAll(false);
     if (!_SelectedUnits.Contains(unit))
     {
       _SelectedUnits.Add(unit);
@@ -83,18 +83,18 @@ public class UnitManager : MonoBehaviour
       _SelectedUnits.Remove(unit);
       unit.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
     }
-    OnEnableAllSelected(true);
+    EnableAll(true);
   }
 
   public void DragSelect(GameObject unit)
   {
-    OnEnableAllSelected(false);
+    EnableAll(false);
     if (!_SelectedUnits.Contains(unit))
     {
       _SelectedUnits.Add(unit);
       unit.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = true;
     }
-    OnEnableAllSelected(true);
+    EnableAll(true);
   }
 
   public void DeselectAll()
@@ -112,7 +112,7 @@ public class UnitManager : MonoBehaviour
     unit.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = select;
   }
 
-  private void OnEnableAllSelected(bool enable)
+  private void EnableAll(bool enable)
   {
     foreach (GameObject unit in _SelectedUnits)
       unit.GetComponent<UnitMovement>().enabled = enable;

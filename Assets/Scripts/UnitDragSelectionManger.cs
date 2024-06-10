@@ -79,33 +79,33 @@ public class UnitDragSelectionManger : MonoBehaviour
 
   private void SelectUnitsGraphically()
   {
-    bool contains_any = false;
-
-    foreach (var unit in UnitManager._Instance._AllUnits)
-      contains_any = _SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)) || contains_any;
-
-    foreach (var unit in UnitManager._Instance._AllUnits)
+    foreach (GameObject unit in UnitManager._Instance._AllUnits)
     {
       if (_SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)))
         UnitManager._Instance.SelectGraphically(unit, true);
-      else if (IsDragging() && contains_any && !Input.GetKey(KeyCode.LeftShift))
+      else if (IsDragging() && IsDragBoxContaining() && !Input.GetKey(KeyCode.LeftShift))
         UnitManager._Instance.SelectGraphically(unit, false);
     }
   }
 
   private void SelectUnits()
   {
-    bool contains_any = false;
-
-    foreach (var unit in UnitManager._Instance._AllUnits)
-      contains_any = _SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)) || contains_any;
-
-    if (IsDragging() && contains_any && !Input.GetKey(KeyCode.LeftShift))
+    if (IsDragging() && IsDragBoxContaining() && !(Input.GetKey(KeyCode.LeftShift)))
       UnitManager._Instance.DeselectAll();
 
-    foreach (var unit in UnitManager._Instance._AllUnits)
+    foreach (GameObject unit in UnitManager._Instance._AllUnits)
       if (_SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)))
         UnitManager._Instance.DragSelect(unit);
+  }
+
+  public bool IsDragBoxContaining()
+  {
+    bool contains_any = false;
+
+    foreach (GameObject unit in UnitManager._Instance._AllUnits)
+      contains_any = _SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)) || contains_any;
+
+    return contains_any;
   }
 
   static public bool IsDragging()
