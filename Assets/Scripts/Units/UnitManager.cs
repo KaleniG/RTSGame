@@ -107,11 +107,6 @@ public class UnitManager : MonoBehaviour
     _SelectedUnits.Clear();
   }
 
-  public void SelectGraphically(GameObject unit, bool select)
-  {
-    unit.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = select;
-  }
-
   private void EnableAll(bool enable)
   {
     foreach (GameObject unit in _SelectedUnits)

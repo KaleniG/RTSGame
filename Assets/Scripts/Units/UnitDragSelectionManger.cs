@@ -29,7 +29,6 @@ public class UnitDragSelectionManger : MonoBehaviour
 
     if (Input.GetMouseButton(0))
     {
-      SelectUnitsGraphically();
       _EndPosition = Input.mousePosition;
       DrawVisual();
       DrawSelection();
@@ -74,17 +73,6 @@ public class UnitDragSelectionManger : MonoBehaviour
     {
       _SelectionBox.yMin = _StartPosition.y;
       _SelectionBox.yMax = Input.mousePosition.y;
-    }
-  }
-
-  private void SelectUnitsGraphically()
-  {
-    foreach (GameObject unit in UnitManager._Instance._AllUnits)
-    {
-      if (_SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)))
-        UnitManager._Instance.SelectGraphically(unit, true);
-      else if (IsDragging() && IsDragBoxContaining() && !Input.GetKey(KeyCode.LeftShift))
-        UnitManager._Instance.SelectGraphically(unit, false);
     }
   }
 
