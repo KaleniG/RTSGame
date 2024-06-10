@@ -56,7 +56,7 @@ public class UnitManager : MonoBehaviour
       }
     }
 
-    if (Input.GetMouseButtonDown(1))
+    if (Input.GetMouseButtonUp(1) && !CameraController.IsSpeedFloating())
       DeselectAll();
   }
 
