@@ -79,11 +79,16 @@ public class UnitDragSelectionManger : MonoBehaviour
 
   private void SelectUnitsGraphically()
   {
+    bool contains_any = false;
+
+    foreach (var unit in UnitManager._Instance._AllUnits)
+      contains_any = _SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)) || contains_any;
+
     foreach (var unit in UnitManager._Instance._AllUnits)
     {
       if (_SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)))
         UnitManager._Instance.SelectGraphically(unit, true);
-      else if (IsDragging())
+      else if (IsDragging() && contains_any && !Input.GetKey(KeyCode.LeftShift))
         UnitManager._Instance.SelectGraphically(unit, false);
     }
   }
@@ -95,7 +100,7 @@ public class UnitDragSelectionManger : MonoBehaviour
     foreach (var unit in UnitManager._Instance._AllUnits)
       contains_any = _SelectionBox.Contains(_Camera.WorldToScreenPoint(unit.transform.position)) || contains_any;
 
-    if (IsDragging() && contains_any)
+    if (IsDragging() && contains_any && !Input.GetKey(KeyCode.LeftShift))
       UnitManager._Instance.DeselectAll();
 
     foreach (var unit in UnitManager._Instance._AllUnits)
