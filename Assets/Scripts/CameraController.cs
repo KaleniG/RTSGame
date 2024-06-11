@@ -1,8 +1,9 @@
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+  public static CameraController _Instance { get; set; }
+
   [SerializeField] private Camera _Camera;
   [SerializeField] private LayerMask _GroundMask;
   [SerializeField] private float _Speed;
@@ -11,7 +12,7 @@ public class CameraController : MonoBehaviour
   [SerializeField] private float _RotationSpeed;
   [SerializeField] private float _MinDoubleClickTime;
 
-  static private Vector2 _SpeedFloatSpeed;
+  private Vector2 _SpeedFloatSpeed;
   private Vector2 _SpeedFloatStart;
   private Vector3 _RotationPoint;
   private float _RotationStart;
@@ -19,6 +20,13 @@ public class CameraController : MonoBehaviour
   private float _LastWheelClickedTime;
   private float _CurrentZoom;
 
+  private void Awake()
+  {
+    if (_Instance != null && _Instance != this)
+      Destroy(this.gameObject);
+    else
+      _Instance = this;
+  }
 
   private void Start()
   {
@@ -36,15 +44,36 @@ public class CameraController : MonoBehaviour
 
   void Update()
   {
+    // [START] Arrow keys camera movement and Screen border camera movement 
+    Vector3 movement_direction = Vector3.zero;
     if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x > Screen.width - _BorderPanWidth)
-      transform.Translate(Vector3.right * _Speed * Time.deltaTime, Space.Self);
+    {
+      Vector3 movement = Vector3.right * _Speed * Time.deltaTime;
+      movement_direction += movement;
+      transform.Translate(movement, Space.Self);
+    }
     if (Input.GetKey(KeyCode.LeftArrow) || Input.mousePosition.x < _BorderPanWidth)
-      transform.Translate(Vector3.left * _Speed * Time.deltaTime, Space.Self);
+    {
+      Vector3 movement = Vector3.left * _Speed * Time.deltaTime;
+      movement_direction += movement;
+      transform.Translate(movement, Space.Self);
+    }
     if (Input.GetKey(KeyCode.UpArrow) || Input.mousePosition.y > Screen.height - _BorderPanWidth)
+    {
+      Vector3 movement = Vector3.forward * _Speed * Time.deltaTime;
+      movement_direction += movement;
       transform.Translate(Vector3.forward * _Speed * Time.deltaTime, Space.Self);
+    }
     if (Input.GetKey(KeyCode.DownArrow) || Input.mousePosition.y < _BorderPanWidth)
+    {
+      Vector3 movement = Vector3.back * _Speed * Time.deltaTime;
+      movement_direction += movement;
       transform.Translate(Vector3.back * _Speed * Time.deltaTime, Space.Self);
+    }
+    CursorManager._Instance.SetMovement(movement_direction);
+    // [END] Arrow keys camera movement and Screen border camera movement 
 
+    // [START] Speedfloating camera movement
     if (Input.GetMouseButtonDown(1))
       _SpeedFloatStart = Input.mousePosition;
 
@@ -59,7 +88,9 @@ public class CameraController : MonoBehaviour
 
     if (Input.GetMouseButtonUp(1))
       _SpeedFloatStart = Vector2.zero;
+    // [END] Speedfloating camera movement
 
+    // [START] Camera zooming
     if (Input.mouseScrollDelta.y > 0)
     {
       float zoom_level = _ZoomSpeed * Time.deltaTime;
@@ -72,7 +103,9 @@ public class CameraController : MonoBehaviour
       _Camera.transform.Translate(Vector3.back * _ZoomSpeed * Time.deltaTime, Space.Self);
       _CurrentZoom -= zoom_level;
     }
+    // [END] Camera zooming
 
+    // [START] Camera rotation and reset
     Physics.Raycast(_Camera.transform.position, _Camera.transform.TransformDirection(Vector3.forward), out var hit, Mathf.Infinity, _GroundMask);
     _RotationPoint = hit.point;
 
@@ -110,7 +143,9 @@ public class CameraController : MonoBehaviour
 
     if (Input.GetMouseButtonUp(2))
       _RotationStart = 0;
+    // [END] Camera rotation and reset
 
+    // [START] Camera rotation and camera zooming reset
     if (Input.GetKeyDown(KeyCode.Space))
     {
       if (_CurrentRotation > 0)
@@ -127,9 +162,10 @@ public class CameraController : MonoBehaviour
 
       _CurrentZoom = 0;
     }
+    // [END] Camera rotation and camera zooming reset
   }
 
-  static public bool IsSpeedFloating()
+  public bool IsSpeedFloating()
   {
     if (_SpeedFloatSpeed.x != 0 && _SpeedFloatSpeed.y != 0)
       return true;

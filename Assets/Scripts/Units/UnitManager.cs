@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
 
 public class UnitManager : MonoBehaviour
 {
@@ -22,13 +16,9 @@ public class UnitManager : MonoBehaviour
   private void Awake()
   {
     if (_Instance != null && _Instance != this)
-    {
       Destroy(this.gameObject);
-    }
     else
-    {
       _Instance = this;
-    }
   }
 
   private void Start()
@@ -50,13 +40,13 @@ public class UnitManager : MonoBehaviour
         else
           MonoSelect(hit.collider.gameObject);
       }
-      else if (_SelectedUnits.Count > 0 && Physics.Raycast(ray, out hit, Mathf.Infinity, _GroundMask) && !UnitDragSelectionManger.IsDragging())
+      else if (_SelectedUnits.Count > 0 && Physics.Raycast(ray, out hit, Mathf.Infinity, _GroundMask) && !UnitDragSelectionManger._Instance.IsDragging())
       {
         Destroy(Instantiate(_PathLandMark, hit.point, Quaternion.identity), 0.5f);
       }
     }
 
-    if (Input.GetMouseButtonUp(1) && !CameraController.IsSpeedFloating())
+    if (Input.GetMouseButtonUp(1) && !CameraController._Instance.IsSpeedFloating())
       DeselectAll();
   }
 

@@ -2,14 +2,24 @@ using UnityEngine;
 
 public class UnitDragSelectionManger : MonoBehaviour
 {
+  public static UnitDragSelectionManger _Instance { get; set; }
+
   [SerializeField] private RectTransform _BoxVisual;
   [SerializeField] private Vector2 _MinBoxSize;
 
-  static private Rect _SelectionBox;
+  private Rect _SelectionBox;
 
   private Camera _Camera;
   private Vector2 _StartPosition;
   private Vector2 _EndPosition;
+
+  private void Awake()
+  {
+    if (_Instance != null && _Instance != this)
+      Destroy(this.gameObject);
+    else
+      _Instance = this;
+  }
 
   private void Start()
   {
@@ -96,7 +106,7 @@ public class UnitDragSelectionManger : MonoBehaviour
     return contains_any;
   }
 
-  static public bool IsDragging()
+  public bool IsDragging()
   {
     if (_SelectionBox.size.x > 0.0f && _SelectionBox.size.y > 0.0f)
       return true;

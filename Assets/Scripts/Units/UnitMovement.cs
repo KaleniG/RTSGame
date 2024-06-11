@@ -21,7 +21,7 @@ public class UnitMovement : MonoBehaviour
       RaycastHit hit;
       Ray move_position = _Camera.ScreenPointToRay(Input.mousePosition);
 
-      if (Physics.Raycast(move_position, out hit, Mathf.Infinity, _GroundMask) && !UnitDragSelectionManger.IsDragging())
+      if (Physics.Raycast(move_position, out hit, Mathf.Infinity, _GroundMask) && !UnitDragSelectionManger._Instance.IsDragging())
         _NavAgent.SetDestination(hit.point);
     }
   }
