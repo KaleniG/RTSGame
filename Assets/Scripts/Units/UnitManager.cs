@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class UnitManager : MonoBehaviour
@@ -34,7 +36,14 @@ public class UnitManager : MonoBehaviour
       Ray ray = _Camera.ScreenPointToRay(Input.mousePosition);
 
       if (Physics.Raycast(ray, out hit, Mathf.Infinity, _ClickableMask))
-      {
+      {  
+        if (hit.collider.CompareTag("Enemy"))
+        {
+          foreach (GameObject unit in _SelectedUnits)
+            unit.GetComponent<UnitAttackController>()._Target = hit.transform;
+          return;
+        }
+
         if (Input.GetKey(KeyCode.LeftShift))
           MultiSelect(hit.collider.gameObject); 
         else
@@ -42,6 +51,9 @@ public class UnitManager : MonoBehaviour
       }
       else if (_SelectedUnits.Count > 0 && Physics.Raycast(ray, out hit, Mathf.Infinity, _GroundMask) && !UnitDragSelectionManger._Instance.IsDragging())
       {
+        foreach (GameObject unit in _SelectedUnits)
+          unit.GetComponent<UnitAttackController>()._Target = null;
+
         Destroy(Instantiate(_PathLandMark, hit.point, Quaternion.identity), 0.5f);
       }
     }

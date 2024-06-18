@@ -5,6 +5,7 @@ public class CursorManager : MonoBehaviour
 {
   public static CursorManager _Instance { get; set; }
 
+  [SerializeField] private bool _Enabled;
   [Header("General")]
   [SerializeField] private Texture2D _Default;
   [Header("Movement")] 
@@ -27,16 +28,21 @@ public class CursorManager : MonoBehaviour
 
   private void Start()
   {
-    SetDefault();
+    if (_Enabled)
+      SetDefault();
   }
 
   public void SetDefault()
   {
-    Cursor.SetCursor(_Default, new Vector2(13, 13), CursorMode.ForceSoftware);
+    if (_Enabled)
+      Cursor.SetCursor(_Default, new Vector2(13, 13), CursorMode.ForceSoftware);
   }
 
   public void SetMovement(Vector3 direction)
   {
+    if (!_Enabled)
+      return;
+
     if (direction.x > 0.0f && direction.z > 0.0f)
     {
       Cursor.SetCursor(_RightForward, new Vector2(32, 0), CursorMode.ForceSoftware);

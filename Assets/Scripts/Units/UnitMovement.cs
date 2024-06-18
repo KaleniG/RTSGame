@@ -7,6 +7,7 @@ public class UnitMovement : MonoBehaviour
 
   private Camera _Camera;
   private NavMeshAgent _NavAgent;
+  private GameObject _Traget;
 
   private void Start()
   {
@@ -22,7 +23,17 @@ public class UnitMovement : MonoBehaviour
       Ray move_position = _Camera.ScreenPointToRay(Input.mousePosition);
 
       if (Physics.Raycast(move_position, out hit, Mathf.Infinity, _GroundMask) && !UnitDragSelectionManger._Instance.IsDragging())
+      {
         _NavAgent.SetDestination(hit.point);
+      }
     }
+
+    if (_Traget != null)
+      _NavAgent.SetDestination(_Traget.transform.position);
+  }
+
+  public void SetTarget(GameObject traget)
+  {
+    _Traget = traget;
   }
 }

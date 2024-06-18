@@ -45,6 +45,7 @@ public class CameraController : MonoBehaviour
   void Update()
   {
     // [START] Arrow keys camera movement and Screen border camera movement 
+    /*
     Vector3 movement_direction = Vector3.zero;
     if (Input.GetKey(KeyCode.RightArrow) || Input.mousePosition.x > Screen.width - _BorderPanWidth)
     {
@@ -71,6 +72,7 @@ public class CameraController : MonoBehaviour
       transform.Translate(Vector3.back * _Speed * Time.deltaTime, Space.Self);
     }
     CursorManager._Instance.SetMovement(movement_direction);
+    */
     // [END] Arrow keys camera movement and Screen border camera movement 
 
     // [START] Speedfloating camera movement
